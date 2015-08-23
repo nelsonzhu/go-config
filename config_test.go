@@ -55,7 +55,7 @@ func Test_GeterAndSetter(t *testing.T) {
 		conf := NewConfig(data)
 		v := conf.ConfValue()
 		if data != v {
-			t.Errorf("get and set error, case:%d set:%#v get:%#v", i, data, v)
+			t.Errorf("Get and set failed, case:%d set:%#v get:%#v", i, data, v)
 		}
 	}
 }

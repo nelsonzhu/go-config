@@ -15,15 +15,15 @@ func Test_SaveAndLoadFromJsonFile(t *testing.T) {
 
 	err := jc.SaveToFile(value)
 	if err != nil {
-		t.Error("save file fail, test does NOT passed", err)
+		t.Error("Save file failed ", err)
 	}
 	defer os.Remove(fileName_json)
 
 	err = jc.LoadFromFile(jcValue)
 	if err != nil {
-		t.Error("test does NOT passed", err)
+		t.Error("LoadFromFile failed ", err)
 	}
 	if !(*jcValue == value && value == jc.ConfValue()) {
-		t.Error("does NOT passed save != get", *jcValue, value, jc.ConfValue())
+		t.Error("Saved value != geted ", *jcValue, value, jc.ConfValue())
 	}
 }

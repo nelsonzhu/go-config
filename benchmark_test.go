@@ -31,16 +31,16 @@ func BenchmarkSaveLoad(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		err := jx.SaveToFile(value)
 		if err != nil {
-			b.Error("save file fail, test does NOT passed", err)
+			b.Error("save file failed", err)
 		}
 		defer os.Remove(fileName_xml)
 
 		err = jx.LoadFromFile(jxValue)
 		if err != nil {
-			b.Error("test does NOT passed", err)
+			b.Error("LoadFromFile failed", err)
 		}
 		if !(*jxValue == value && value == jx.ConfValue()) {
-			b.Error("does NOT passed save != get", *jxValue, value, jx.ConfValue())
+			b.Error("saved values != geted", *jxValue, value, jx.ConfValue())
 		}
 	}
 }

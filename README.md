@@ -9,7 +9,7 @@ go-config is a complete configuration solution for go applications. It is design
 * reading from JSON, XML config files
 * reading from buffer
 * hot relaod
-* Marshaling interface easy support other format
+* Marshaling parser interface easy to support other format
 
 ## Install
 			

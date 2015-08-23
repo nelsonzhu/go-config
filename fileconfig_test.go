@@ -36,7 +36,7 @@ func Test_SaveAndLoadConfValue(t *testing.T) {
 	fc := NewFileConfig(test_filename, new(fakeCoder))
 	err := fc.SaveToFile(fakeCoder_text)
 	if err != nil {
-		t.Error("savetoFile test failed", err)
+		t.Error("SavetoFile test failed", err)
 	}
 	defer os.Remove(test_filename)
 	newvalue := fc.ConfValue()
@@ -64,17 +64,17 @@ func Test_FileWatcher(t *testing.T) {
 	fc := NewFileConfig(test_filename, new(fakeCoder))
 	err := fc.SaveToFile(fakeCoder_text)
 	if err != nil {
-		t.Error("savetoFile failed ", err)
+		t.Error("SavetoFile failed ", err)
 	}
 	defer os.Remove(test_filename)
 
 	err = fc.StartWatcher(watcherhandler)
 	if err != nil {
-		t.Error("start watcher failed ", err)
+		t.Error("Start watcher failed ", err)
 	}
 	time.Sleep(50 * time.Millisecond)
 	if fc.WatcherStared() != true {
-		t.Error("start watcher failed")
+		t.Error("Start watcher failed")
 	}
 
 	var event_count = 0
@@ -83,12 +83,12 @@ func Test_FileWatcher(t *testing.T) {
 		for {
 			select {
 			case ev := <-receivedEvent:
-				t.Log("reveive event ", ev)
+				t.Log("Reveived event ", ev)
 				event_count++
 			case <-done:
 				return
 			case <-time.After(3 * time.Second):
-				t.Error("reveive event time out")
+				t.Error("Reveive event time out")
 				return
 			}
 		}
@@ -96,17 +96,17 @@ func Test_FileWatcher(t *testing.T) {
 
 	err = fc.SaveToFile(fakeCoder_text)
 	if err != nil {
-		t.Error("savetoFile test failed", err)
+		t.Error("SavetoFile test failed", err)
 	}
 
 	time.Sleep(50 * time.Millisecond)
 	fc.StopWatcher()
 	done <- true
 	if fc.WatcherStared() != false {
-		t.Error("watcher stop failed")
+		t.Error("Watcher stop failed")
 	}
 
 	if event_count == 0 {
-		t.Error("receive evernt failed")
+		t.Error("Receive evernt failed")
 	}
 }
