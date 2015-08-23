@@ -2,11 +2,25 @@
 
 Cross platform: Windows, Linux, BSD and OS X.
 
+## What is go-config?
+
+go-config is a complete configuration solution for go applications. It is designed to work within an application, and can handle all types of configuration needs and formats. It supports:
+
+* reading from JSON, XML config files
+* reading from buffer
+* hot relaod
+* Marshaling interface easy support other format
+
+## install
+			
+		go get github.com/nelsonzhu/go-config
+
 ## Example:
 
 * config
 
 	 config  implements configuration get and set, it safe for concureency
+
 	 Basic examples:
 	
 		  type myConfg struct {
@@ -26,7 +40,7 @@ Cross platform: Windows, Linux, BSD and OS X.
 
 * fileconfig
 
-	* provide file save, load and watcher
+	* provide file save, load and hot configuration reload
 	* watcher function by using fsnotify package. [github.com/go-fsnotify/fsnotify](https://github.com/go-fsnotify/fsnotify)	
 	Copyright (c) 2012 The Go Authors. All rights reserved.
 	Copyright (c) 2012 fsnotify Authors. All rights reserved.
@@ -35,6 +49,7 @@ Cross platform: Windows, Linux, BSD and OS X.
 * xml and Json configfile
     
     provide xml and Json decoder and encoder
+
     base example
 
 		var AppConfig *config.FileConfig
@@ -90,5 +105,11 @@ Cross platform: Windows, Linux, BSD and OS X.
 
 			AppConfig.StopWatcher()
 		}
+
+## License
+
+Copyright 2012 The go-config Authors. All rights reserved.
+Use of this source code is governed by a BSD-style
+license that can be found in the LICENSE file.
 
 
