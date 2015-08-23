@@ -11,7 +11,7 @@ go-config is a complete configuration solution for go applications. It is design
 * hot relaod
 * Marshaling interface easy support other format
 
-## install
+## Install
 			
 		go get github.com/nelsonzhu/go-config
 
