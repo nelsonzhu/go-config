@@ -175,7 +175,7 @@ func (fc *FileConfig) LoadFromFile(v interface{}) error {
 	return nil
 }
 
-// SaveToFile encode conf object to byte slice and save encoded object to file
+// SaveToFile encode v object to byte slice and save encoded object to file
 // encoded object save to internal storage simultaneously.
 // writes encoded data to a file named by FileName property.
 // If the file does not exist, SaveToFile creates it; otherwise truncates it before writing.
