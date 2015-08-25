@@ -171,7 +171,7 @@ func (this *FileConfig) LoadFromFile(conf interface{}) error {
 		return implError
 	}
 
-	this.base.SetConfValue(reflect.ValueOf(conf).Elem().Interface())
+	this.base.Set(reflect.ValueOf(conf).Elem().Interface())
 	return nil
 }
 
@@ -191,7 +191,7 @@ func (this *FileConfig) SaveToFile(conf interface{}) error {
 	if err != nil {
 		return err
 	}
-	this.base.SetConfValue(conf)
+	this.base.Set(conf)
 
 	return ioutil.WriteFile(this.fileName, data, 0666)
 }
@@ -215,5 +215,5 @@ func (this *FileConfig) SetFileName(name string) {
 
 // ConfValue get config value from internal storage
 func (this *FileConfig) ConfValue() interface{} {
-	return this.base.ConfValue()
+	return this.base.Get()
 }
