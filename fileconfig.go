@@ -143,14 +143,14 @@ func (fc *FileConfig) StartWatcher(handler NotifyHandler) error {
 
 // LoadFromFile load content from file and decodes it to object
 // save the decoded object to internal storage
-// conf: decoded object receiveer, must be a pointer to object
+// v: decoded object receiveer, must be a pointer to object
 // You should call fc function after file changed to refrash the data;
 // otherwise you can call ConfValue to get object from internal storage
-func (fc *FileConfig) LoadFromFile(conf interface{}) error {
+func (fc *FileConfig) LoadFromFile(v interface{}) error {
 	fc.lk.RLock()
 	defer fc.lk.RUnlock()
 
-	if conf == nil {
+	if v == nil {
 		return saveNilError
 	}
 
@@ -163,15 +163,15 @@ func (fc *FileConfig) LoadFromFile(conf interface{}) error {
 		return err
 	}
 
-	err = fc.coder.Decode(data, conf)
+	err = fc.coder.Decode(data, v)
 	if err != nil {
 		return err
 	}
-	if conf == nil {
+	if v == nil {
 		return implError
 	}
 
-	fc.base.Set(reflect.ValueOf(conf).Elem().Interface())
+	fc.base.Set(reflect.ValueOf(v).Elem().Interface())
 	return nil
 }
 
@@ -179,19 +179,19 @@ func (fc *FileConfig) LoadFromFile(conf interface{}) error {
 // encoded object save to internal storage simultaneously.
 // writes encoded data to a file named by FileName property.
 // If the file does not exist, SaveToFile creates it; otherwise truncates it before writing.
-func (fc *FileConfig) SaveToFile(conf interface{}) error {
+func (fc *FileConfig) SaveToFile(v interface{}) error {
 	fc.lk.Lock()
 	defer fc.lk.Unlock()
 
-	if conf == nil {
+	if v == nil {
 		return saveNilError
 	}
 
-	data, err := fc.coder.Encode(conf)
+	data, err := fc.coder.Encode(v)
 	if err != nil {
 		return err
 	}
-	fc.base.Set(conf)
+	fc.base.Set(v)
 
 	return ioutil.WriteFile(fc.fileName, data, 0666)
 }
@@ -213,7 +213,7 @@ func (fc *FileConfig) SetFileName(name string) {
 	}
 }
 
-// ConfValue get config value from internal storage
-func (fc *FileConfig) ConfValue() interface{} {
+// Value get config value from internal storage
+func (fc *FileConfig) Value() interface{} {
 	return fc.base.Get()
 }

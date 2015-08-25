@@ -15,11 +15,11 @@ const fakeCoder_text = "test"
 type fakeCoder struct {
 }
 
-func (this *fakeCoder) Encode(v interface{}) ([]byte, error) {
+func (fc *fakeCoder) Encode(v interface{}) ([]byte, error) {
 	return []byte(fakeCoder_text), nil
 }
 
-func (this *fakeCoder) Decode(data []byte, v interface{}) error {
+func (fc *fakeCoder) Decode(data []byte, v interface{}) error {
 	*v.(*string) = string(data)
 	return nil
 }
@@ -39,7 +39,7 @@ func Test_SaveAndLoadConfValue(t *testing.T) {
 		t.Error("SavetoFile test failed", err)
 	}
 	defer os.Remove(test_filename)
-	newvalue := fc.ConfValue()
+	newvalue := fc.Value()
 	if newvalue != fakeCoder_text {
 		t.Errorf("ConfValue test failed, get %v != set %v", newvalue, fakeCoder_text)
 	}

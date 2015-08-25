@@ -39,8 +39,8 @@ func BenchmarkSaveLoad(b *testing.B) {
 		if err != nil {
 			b.Error("LoadFromFile failed", err)
 		}
-		if !(*jxValue == value && value == jx.ConfValue()) {
-			b.Error("saved values != geted", *jxValue, value, jx.ConfValue())
+		if !(*jxValue == value && value == jx.Value()) {
+			b.Error("saved values != geted", *jxValue, value, jx.Value())
 		}
 	}
 }

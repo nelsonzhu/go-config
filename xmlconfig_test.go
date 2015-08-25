@@ -23,7 +23,7 @@ func Test_SaveAndLoadFromXMLFile(t *testing.T) {
 	if err != nil {
 		t.Error("LoadFromFile failed", err)
 	}
-	if !(*jxValue == value && value == jx.ConfValue()) {
-		t.Error("Saved value != get", *jxValue, value, jx.ConfValue())
+	if !(*jxValue == value && value == jx.Value()) {
+		t.Error("Saved value != get", *jxValue, value, jx.Value())
 	}
 }

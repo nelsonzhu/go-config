@@ -19,12 +19,12 @@ import "encoding/json"
 type JsonCoder struct{}
 
 // Decode decode from byte slice which has Json format
-func (this *JsonCoder) Decode(data []byte, v interface{}) error {
+func (jc *JsonCoder) Decode(data []byte, v interface{}) error {
 	return json.Unmarshal(data, v)
 }
 
 // Encode v to byte slice by json Marshal
-func (this *JsonCoder) Encode(v interface{}) ([]byte, error) {
+func (jc *JsonCoder) Encode(v interface{}) ([]byte, error) {
 	return json.MarshalIndent(v, "", "    ")
 }
 

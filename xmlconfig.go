@@ -18,12 +18,12 @@ import "encoding/xml"
 type XMLCoder struct{}
 
 // Decode decode from byte slice which has xml format
-func (this *XMLCoder) Decode(data []byte, v interface{}) error {
+func (xc *XMLCoder) Decode(data []byte, v interface{}) error {
 	return xml.Unmarshal(data, v)
 }
 
 // Encode v to byte slice by xml Marshal
-func (this *XMLCoder) Encode(v interface{}) ([]byte, error) {
+func (xc *XMLCoder) Encode(v interface{}) ([]byte, error) {
 	return xml.MarshalIndent(v, "", "    ")
 }
 
