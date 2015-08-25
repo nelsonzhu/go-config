@@ -65,22 +65,22 @@ func NewFileConfig(fileName string, coder Coder) *FileConfig {
 }
 
 // WatcherStared is a perperty which shows the file watcher is started or not
-func (this *FileConfig) WatcherStared() bool {
-	this.lk.RLock()
-	defer this.lk.RUnlock()
-	return this.watcherStared
+func (fc *FileConfig) WatcherStared() bool {
+	fc.lk.RLock()
+	defer fc.lk.RUnlock()
+	return fc.watcherStared
 }
 
 // StopWatcher stop the file watcher
-// the StopWatcher should be call when you no longer need this object if WatcherStared
-func (this *FileConfig) StopWatcher() {
-	this.lk.Lock()
-	defer this.lk.Unlock()
+// the StopWatcher should be call when you no longer need fc object if WatcherStared
+func (fc *FileConfig) StopWatcher() {
+	fc.lk.Lock()
+	defer fc.lk.Unlock()
 
-	if this.watcherStared == true {
-		this.done <- true
+	if fc.watcherStared == true {
+		fc.done <- true
 		select {
-		case <-this.done:
+		case <-fc.done:
 		case <-time.After(2 * time.Second):
 		}
 	}
@@ -89,12 +89,12 @@ func (this *FileConfig) StopWatcher() {
 
 // StartWatcher start a file watcher to notify file changed
 // StartWatcher call the handle once the file changed
-func (this *FileConfig) StartWatcher(handler NotifyHandler) error {
-	this.lk.Lock()
-	defer this.lk.Unlock()
+func (fc *FileConfig) StartWatcher(handler NotifyHandler) error {
+	fc.lk.Lock()
+	defer fc.lk.Unlock()
 
 	// access instence var directly
-	if this.watcherStared {
+	if fc.watcherStared {
 		return nil
 	}
 
@@ -104,39 +104,39 @@ func (this *FileConfig) StartWatcher(handler NotifyHandler) error {
 	}
 
 	// access instance var directly
-	err = watcher.Watch(this.fileName)
+	err = watcher.Watch(fc.fileName)
 	if err != nil {
 		watcher.Close()
 		return err
 	}
 
-	go func(w *fsnotify.Watcher) {
-		this.watcherStared = true
+	go func() {
+		fc.watcherStared = true
 		defer func() {
-			this.watcherStared = false
+			fc.watcherStared = false
 		}()
-		defer w.Close()
+		defer watcher.Close()
 		for {
 			select {
-			case ev := <-w.Event:
+			case ev := <-watcher.Event:
 				if handler != nil {
-					action := handler(this, ev)
+					action := handler(fc, ev)
 					switch action {
 					case NA_Stop:
 						return
 					case NA_Restart:
-						w.RemoveWatch(this.FileName())
-						w.Watch(this.FileName())
+						watcher.RemoveWatch(fc.FileName())
+						watcher.Watch(fc.FileName())
 					}
 				}
-			case <-w.Error:
+			case <-watcher.Error:
 				return
-			case <-this.done:
-				this.done <- true
+			case <-fc.done:
+				fc.done <- true
 				return
 			}
 		}
-	}(watcher)
+	}()
 
 	return nil
 }
@@ -144,26 +144,26 @@ func (this *FileConfig) StartWatcher(handler NotifyHandler) error {
 // LoadFromFile load content from file and decodes it to object
 // save the decoded object to internal storage
 // conf: decoded object receiveer, must be a pointer to object
-// You should call this function after file changed to refrash the data;
+// You should call fc function after file changed to refrash the data;
 // otherwise you can call ConfValue to get object from internal storage
-func (this *FileConfig) LoadFromFile(conf interface{}) error {
-	this.lk.RLock()
-	defer this.lk.RUnlock()
+func (fc *FileConfig) LoadFromFile(conf interface{}) error {
+	fc.lk.RLock()
+	defer fc.lk.RUnlock()
 
 	if conf == nil {
 		return saveNilError
 	}
 
-	if this.coder == nil {
+	if fc.coder == nil {
 		return coderNilError
 	}
 
-	data, err := ioutil.ReadFile(this.fileName)
+	data, err := ioutil.ReadFile(fc.fileName)
 	if err != nil {
 		return err
 	}
 
-	err = this.coder.Decode(data, conf)
+	err = fc.coder.Decode(data, conf)
 	if err != nil {
 		return err
 	}
@@ -171,7 +171,7 @@ func (this *FileConfig) LoadFromFile(conf interface{}) error {
 		return implError
 	}
 
-	this.base.Set(reflect.ValueOf(conf).Elem().Interface())
+	fc.base.Set(reflect.ValueOf(conf).Elem().Interface())
 	return nil
 }
 
@@ -179,41 +179,41 @@ func (this *FileConfig) LoadFromFile(conf interface{}) error {
 // encoded object save to internal storage simultaneously.
 // writes encoded data to a file named by FileName property.
 // If the file does not exist, SaveToFile creates it; otherwise truncates it before writing.
-func (this *FileConfig) SaveToFile(conf interface{}) error {
-	this.lk.Lock()
-	defer this.lk.Unlock()
+func (fc *FileConfig) SaveToFile(conf interface{}) error {
+	fc.lk.Lock()
+	defer fc.lk.Unlock()
 
 	if conf == nil {
 		return saveNilError
 	}
 
-	data, err := this.coder.Encode(conf)
+	data, err := fc.coder.Encode(conf)
 	if err != nil {
 		return err
 	}
-	this.base.Set(conf)
+	fc.base.Set(conf)
 
-	return ioutil.WriteFile(this.fileName, data, 0666)
+	return ioutil.WriteFile(fc.fileName, data, 0666)
 }
 
 // FileName property getter
-func (this *FileConfig) FileName() string {
-	this.lk.RLock()
-	defer this.lk.RUnlock()
-	return this.fileName
+func (fc *FileConfig) FileName() string {
+	fc.lk.RLock()
+	defer fc.lk.RUnlock()
+	return fc.fileName
 }
 
 // SetFileName set config filename
-func (this *FileConfig) SetFileName(name string) {
-	this.lk.Lock()
-	defer this.lk.Unlock()
+func (fc *FileConfig) SetFileName(name string) {
+	fc.lk.Lock()
+	defer fc.lk.Unlock()
 
-	if this.fileName != name {
-		this.fileName = name
+	if fc.fileName != name {
+		fc.fileName = name
 	}
 }
 
 // ConfValue get config value from internal storage
-func (this *FileConfig) ConfValue() interface{} {
-	return this.base.Get()
+func (fc *FileConfig) ConfValue() interface{} {
+	return fc.base.Get()
 }
