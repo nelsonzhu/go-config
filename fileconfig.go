@@ -145,7 +145,7 @@ func (fc *FileConfig) StartWatcher(handler NotifyHandler) error {
 // save the decoded object to internal storage
 // v: decoded object receiveer, must be a pointer to object
 // You should call fc function after file changed to refrash the data;
-// otherwise you can call ConfValue to get object from internal storage
+// otherwise you can call Value to get object from internal storage
 func (fc *FileConfig) LoadFromFile(v interface{}) error {
 	fc.lk.RLock()
 	defer fc.lk.RUnlock()
