@@ -15,15 +15,15 @@ func Test_SaveAndLoadFromXMLFile(t *testing.T) {
 
 	err := jx.SaveToFile(value)
 	if err != nil {
-		t.Error("save file failed, test does NOT passed", err)
+		t.Error("Save file failed ", err)
 	}
 	defer os.Remove(fileName_xml)
 
 	err = jx.LoadFromFile(jxValue)
 	if err != nil {
-		t.Error("LoadFromFile failed", err)
+		t.Error("LoadFromFile failed ", err)
 	}
 	if !(*jxValue == value && value == jx.Value()) {
-		t.Error("Saved value != get", *jxValue, value, jx.Value())
+		t.Errorf("Value to be save:%v Loaded value:%v Get saved value:%v", value, *jxValue, jx.Value())
 	}
 }

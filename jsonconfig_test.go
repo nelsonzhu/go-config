@@ -23,7 +23,7 @@ func Test_SaveAndLoadFromJsonFile(t *testing.T) {
 	if err != nil {
 		t.Error("LoadFromFile failed ", err)
 	}
-	if !(*jcValue == value && value == jc.Value()) {
-		t.Error("Saved value != geted ", *jcValue, value, jc.Value())
+	if !(*jxValue == value && value == jx.Value()) {
+		t.Errorf("Value to be save:%v Loaded value:%v Get saved value:%v", value, *jxValue, jx.Value())
 	}
 }
