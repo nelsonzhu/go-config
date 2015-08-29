@@ -3,11 +3,6 @@
 // license that can be found in the LICENSE file.
 // Author Nelson
 
-// config package privide:
-// 		atomic storage object
-//		file configuration save, load and watcher
-//		xml and Json encoder, decoder interface
-
 package config
 
 import "encoding/json"

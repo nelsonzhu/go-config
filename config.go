@@ -3,11 +3,13 @@
 // license that can be found in the LICENSE file.
 // Author Nelson
 
-// config package privide:
-// 		atomic storage object
-//		file configuration save, load and watcher
-//		xml and Json encoder, decoder interface
-
+// config package is a complete configuration solution for go applications.
+// It is designed to work within an application, and can handle all types of configuration needs and formats. It supports:
+// 	atomic storage object
+// 	reading from JSON, XML config files
+// 	reading from buffer
+// 	hot relaod
+// 	Marshaling parser interface easy to support other format
 package config
 
 import "sync/atomic"
