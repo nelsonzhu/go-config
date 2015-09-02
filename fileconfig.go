@@ -29,36 +29,36 @@ const (
 type NotifyHandler func(Sender *FileConfig, event *fsnotify.FileEvent) NotifyAction
 
 var (
-	implError     = errors.New("imtemplment of coder is wrong, cant return nil when not error")
-	coderNilError = errors.New("config Coder is nil")
+	implError     = errors.New("imtemplment of codec is wrong, cant return nil when not error")
+	codecNilError = errors.New("config Codec is nil")
 	saveNilError  = errors.New("can not load or save nil configuration value")
 )
 
-// Coder interface define encode and decode function
+// Codec interface define encode and decode function
 // Encode encodes configuration object to byte slice
 // Decode decodes byte slice to configuration object
-type Coder interface {
+type Codec interface {
 	Encode(v interface{}) ([]byte, error)
 	Decode(data []byte, v interface{}) error
 }
 
 // A FileConfig which is used for both reading and writing configration file.
 // base is Config object which provide storage. Writing and reading simultaneously are safety.
-// The coder is Coder interface which encode and decode configration object
+// The codec is Codec interface which encode and decode configration object
 type FileConfig struct {
 	base          Config
 	fileName      string
-	coder         Coder
+	codec         Codec
 	lk            sync.RWMutex
 	done          chan bool
 	watcherStared bool
 }
 
 // NewFileConfig creates FileConfig object
-func NewFileConfig(fileName string, coder Coder) *FileConfig {
+func NewFileConfig(fileName string, codec Codec) *FileConfig {
 	fc := new(FileConfig)
 	fc.fileName = fileName
-	fc.coder = coder
+	fc.codec = codec
 	fc.done = make(chan bool)
 	return fc
 }
@@ -153,8 +153,8 @@ func (fc *FileConfig) LoadFromFile(v interface{}) error {
 		return saveNilError
 	}
 
-	if fc.coder == nil {
-		return coderNilError
+	if fc.codec == nil {
+		return codecNilError
 	}
 
 	data, err := ioutil.ReadFile(fc.fileName)
@@ -162,7 +162,7 @@ func (fc *FileConfig) LoadFromFile(v interface{}) error {
 		return err
 	}
 
-	err = fc.coder.Decode(data, v)
+	err = fc.codec.Decode(data, v)
 	if err != nil {
 		return err
 	}
@@ -186,7 +186,7 @@ func (fc *FileConfig) SaveToFile(v interface{}) error {
 		return saveNilError
 	}
 
-	data, err := fc.coder.Encode(v)
+	data, err := fc.codec.Encode(v)
 	if err != nil {
 		return err
 	}

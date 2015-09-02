@@ -10,18 +10,18 @@ package config
 import "encoding/xml"
 
 // implement Coder interface
-type XMLCoder struct{}
+type XMLCodec struct{}
 
 // Decode decode from byte slice which has xml format
-func (xc *XMLCoder) Decode(data []byte, v interface{}) error {
+func (xc *XMLCodec) Decode(data []byte, v interface{}) error {
 	return xml.Unmarshal(data, v)
 }
 
 // Encode v to byte slice by xml Marshal
-func (xc *XMLCoder) Encode(v interface{}) ([]byte, error) {
+func (xc *XMLCodec) Encode(v interface{}) ([]byte, error) {
 	return xml.MarshalIndent(v, "", "    ")
 }
 
 func NewXMLConfig(fileName string) *FileConfig {
-	return (NewFileConfig(fileName, new(XMLCoder)))
+	return (NewFileConfig(fileName, new(XMLCodec)))
 }

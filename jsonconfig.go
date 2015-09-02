@@ -9,20 +9,20 @@ package config
 
 import "encoding/json"
 
-// implement Coder interface
-type JsonCoder struct{}
+// implement Codec interface
+type JsonCodec struct{}
 
 // Decode decode from byte slice which has Json format
-func (jc *JsonCoder) Decode(data []byte, v interface{}) error {
+func (jc *JsonCodec) Decode(data []byte, v interface{}) error {
 	return json.Unmarshal(data, v)
 }
 
 // Encode v to byte slice by json Marshal
-func (jc *JsonCoder) Encode(v interface{}) ([]byte, error) {
+func (jc *JsonCodec) Encode(v interface{}) ([]byte, error) {
 	return json.MarshalIndent(v, "", "    ")
 }
 
 // NewJsonConfig create FileConfig support Json encode and decode
 func NewJsonConfig(fileName string) *FileConfig {
-	return NewFileConfig(fileName, new(JsonCoder))
+	return NewFileConfig(fileName, new(JsonCodec))
 }
