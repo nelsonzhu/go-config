@@ -3,12 +3,11 @@
 // license that can be found in the LICENSE file.
 // Author Nelson
 
+//	Support load configuration from xml file
+// 	Support save configuration to xml file
 package config
 
 import "encoding/xml"
-
-// XMLConfig support load configuration from xml file
-// XMLConfig support save configuration to xml file
 
 // implement Coder interface
 type XMLCoder struct{}

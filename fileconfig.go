@@ -3,6 +3,9 @@
 // license that can be found in the LICENSE file.
 // Author Nelson
 
+// 	Reading from buffer
+// 	Hot relaod
+// 	Marshaling parser interface easy to support other format
 package config
 
 import (

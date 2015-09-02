@@ -3,12 +3,11 @@
 // license that can be found in the LICENSE file.
 // Author Nelson
 
+//	Support load configuration from  Json file
+// 	Support save configuration to Json file
 package config
 
 import "encoding/json"
-
-// JsonConfig support load configuration from  Json file
-// JsonConfig support save configuration to Json file
 
 // implement Coder interface
 type JsonCoder struct{}
