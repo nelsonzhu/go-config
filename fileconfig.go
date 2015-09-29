@@ -46,7 +46,7 @@ type Codec interface {
 // base is Config object which provide storage. Writing and reading simultaneously are safety.
 // The codec is Codec interface which encode and decode configration object
 type FileConfig struct {
-	base          Config
+	Config
 	fileName      string
 	codec         Codec
 	lk            sync.RWMutex
@@ -170,7 +170,7 @@ func (fc *FileConfig) LoadFromFile(v interface{}) error {
 		return implError
 	}
 
-	fc.base.Set(reflect.ValueOf(v).Elem().Interface())
+	fc.SetValue(reflect.ValueOf(v).Elem().Interface())
 	return nil
 }
 
@@ -190,7 +190,7 @@ func (fc *FileConfig) SaveToFile(v interface{}) error {
 	if err != nil {
 		return err
 	}
-	fc.base.Set(v)
+	fc.SetValue(v)
 
 	return ioutil.WriteFile(fc.fileName, data, 0666)
 }
@@ -210,9 +210,4 @@ func (fc *FileConfig) SetFileName(name string) {
 	if fc.fileName != name {
 		fc.fileName = name
 	}
-}
-
-// Value get config value from internal storage
-func (fc *FileConfig) Value() interface{} {
-	return fc.base.Get()
 }

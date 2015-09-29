@@ -33,10 +33,10 @@ go-config is a complete configuration solution for go applications. It is design
 		  c := NewConfig(myConfig{"test name",20,time.Now()})
 	
 		  //get configuration value
-		  v := c.Get()
+		  v := c.Value()
 	
 		  //set configuration value
-		  c.Set(myConfig{"test name",20,time.Now()})
+		  c.SetValue(myConfig{"test name",20,time.Now()})
 
 * fileconfig
 
