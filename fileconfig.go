@@ -3,9 +3,9 @@
 // license that can be found in the LICENSE file.
 // Author Nelson
 
-// 	Reading from buffer
-// 	Hot relaod
-// 	Marshaling parser interface easy to support other format
+// Package config Reading from buffer
+// Hot relaod
+// Marshaling parser interface easy to support other format
 package config
 
 import (
@@ -29,10 +29,11 @@ const (
 
 type NotifyHandler func(Sender *FileConfig, event *fsnotify.FileEvent) NotifyAction
 
+// Errors Load from configration file
 var (
-	implError     = errors.New("imtemplment of codec is wrong, cant return nil when not error")
-	codecNilError = errors.New("config Codec is nil")
-	saveNilError  = errors.New("can not load or save nil configuration value")
+	ErrImpl     = errors.New("imtemplment of codec is wrong, cant return nil when not error")
+	ErrCodecNil = errors.New("config Codec is nil")
+	ErrSaveNil  = errors.New("can not load or save nil configuration value")
 )
 
 // Codec interface define encode and decode function
@@ -163,11 +164,11 @@ func (fc *FileConfig) LoadFromFile(v interface{}) error {
 	defer fc.lk.RUnlock()
 
 	if v == nil {
-		return saveNilError
+		return ErrSaveNil
 	}
 
 	if fc.codec == nil {
-		return codecNilError
+		return ErrCodecNil
 	}
 
 	data, err := ioutil.ReadFile(fc.fileName)
@@ -180,7 +181,7 @@ func (fc *FileConfig) LoadFromFile(v interface{}) error {
 		return err
 	}
 	if v == nil {
-		return implError
+		return ErrImpl
 	}
 
 	fc.base.Set(reflect.ValueOf(v).Elem().Interface())
@@ -196,7 +197,7 @@ func (fc *FileConfig) SaveToFile(v interface{}) error {
 	defer fc.lk.Unlock()
 
 	if v == nil {
-		return saveNilError
+		return ErrSaveNil
 	}
 
 	data, err := fc.codec.Encode(v)
