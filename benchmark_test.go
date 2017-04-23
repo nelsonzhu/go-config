@@ -12,7 +12,7 @@ func BenchmarkConfValue(b *testing.B) {
 		go func() {
 			for i, data := range testConfigDates {
 				conf := NewConfig(data)
-				v := conf.Value()
+				v := conf.Get()
 				if data != v {
 					b.Errorf("get and set error, case:%d set:%#v get:%#v", i, data, v)
 				}

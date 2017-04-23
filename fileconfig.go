@@ -10,6 +10,7 @@ package config
 
 import (
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"reflect"
 	"sync"
@@ -46,7 +47,7 @@ type Codec interface {
 // base is Config object which provide storage. Writing and reading simultaneously are safety.
 // The codec is Codec interface which encode and decode configration object
 type FileConfig struct {
-	Config
+	base          Config
 	fileName      string
 	codec         Codec
 	lk            sync.RWMutex
@@ -111,10 +112,21 @@ func (fc *FileConfig) StartWatcher(handler NotifyHandler) error {
 
 	go func() {
 		fc.watcherStared = true
+
 		defer func() {
+			if rv := recover(); rv != nil {
+				emsg := "FileConfig Watcher go routine error "
+				e, OK := rv.(error)
+				if OK {
+					emsg = emsg + e.Error()
+				}
+				fmt.Println(emsg)
+			}
+
+			watcher.Close()
 			fc.watcherStared = false
 		}()
-		defer watcher.Close()
+
 		for {
 			select {
 			case ev := <-watcher.Event:
@@ -131,6 +143,7 @@ func (fc *FileConfig) StartWatcher(handler NotifyHandler) error {
 			case <-watcher.Error:
 				return
 			case <-fc.done:
+				fc.watcherStared = false
 				fc.done <- true
 				return
 			}
@@ -170,7 +183,7 @@ func (fc *FileConfig) LoadFromFile(v interface{}) error {
 		return implError
 	}
 
-	fc.SetValue(reflect.ValueOf(v).Elem().Interface())
+	fc.base.Set(reflect.ValueOf(v).Elem().Interface())
 	return nil
 }
 
@@ -190,7 +203,7 @@ func (fc *FileConfig) SaveToFile(v interface{}) error {
 	if err != nil {
 		return err
 	}
-	fc.SetValue(v)
+	fc.base.Set(v)
 
 	return ioutil.WriteFile(fc.fileName, data, 0666)
 }
@@ -210,4 +223,9 @@ func (fc *FileConfig) SetFileName(name string) {
 	if fc.fileName != name {
 		fc.fileName = name
 	}
+}
+
+// Value get config value from internal storage
+func (fc *FileConfig) Value() interface{} {
+	return fc.base.Get()
 }

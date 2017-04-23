@@ -53,7 +53,7 @@ var testConfigDates = []interface{}{
 func Test_GeterAndSetter(t *testing.T) {
 	for i, data := range testConfigDates {
 		conf := NewConfig(data)
-		v := conf.Value()
+		v := conf.Get()
 		if data != v {
 			t.Errorf("Get and set failed, case:%d set:%#v get:%#v", i, data, v)
 		}

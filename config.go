@@ -20,10 +20,10 @@ func NewConfig(v interface{}) *Config {
 	return c
 }
 
-func (c *Config) Value() interface{} {
+func (c *Config) Get() interface{} {
 	return c.internalStore.Load()
 }
 
-func (c *Config) SetValue(v interface{}) {
+func (c *Config) Set(v interface{}) {
 	c.internalStore.Store(v)
 }
