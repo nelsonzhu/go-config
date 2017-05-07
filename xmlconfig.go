@@ -3,13 +3,13 @@
 // license that can be found in the LICENSE file.
 // Author Nelson
 
-//	Support load configuration from xml file
-// 	Support save configuration to xml file
+// Package config Support load configuration from xml file
+// Support save configuration to xml file
 package config
 
 import "encoding/xml"
 
-// implement Coder interface
+// XMLCodec implement Coder interface
 type XMLCodec struct{}
 
 // Decode decode from byte slice which has xml format
@@ -22,6 +22,7 @@ func (xc *XMLCodec) Encode(v interface{}) ([]byte, error) {
 	return xml.MarshalIndent(v, "", "    ")
 }
 
+// NewXMLConfig new xmlconfig
 func NewXMLConfig(fileName string) *FileConfig {
 	return (NewFileConfig(fileName, new(XMLCodec)))
 }

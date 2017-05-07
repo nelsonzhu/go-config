@@ -22,8 +22,8 @@ func BenchmarkConfValue(b *testing.B) {
 }
 
 func BenchmarkSaveLoad(b *testing.B) {
-	jx := NewXMLConfig(fileName_json)
-	value := test_item
+	jx := NewXMLConfig(jasonFileName)
+	value := testItem
 	jxValue := new(testTConfig)
 
 	b.ReportAllocs()
@@ -33,7 +33,7 @@ func BenchmarkSaveLoad(b *testing.B) {
 		if err != nil {
 			b.Error("save file failed", err)
 		}
-		defer os.Remove(fileName_xml)
+		defer os.Remove(xmlFileName)
 
 		err = jx.LoadFromFile(jxValue)
 		if err != nil {

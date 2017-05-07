@@ -19,21 +19,24 @@ import (
 	"github.com/howeyc/fsnotify"
 )
 
+// NotifyAction Notification Action
 type NotifyAction int
 
+// notification action const define
 const (
-	NA_Continue = iota
-	NA_Restart
-	NA_Stop
+	NAContinue = iota
+	NARestart
+	NAStop
 )
 
+// NotifyHandler function define
 type NotifyHandler func(Sender *FileConfig, event *fsnotify.FileEvent) NotifyAction
 
-// Errors Load from configration file
+// error define
 var (
-	ErrImpl     = errors.New("imtemplment of codec is wrong, cant return nil when not error")
-	ErrCodecNil = errors.New("config Codec is nil")
-	ErrSaveNil  = errors.New("can not load or save nil configuration value")
+	errImpl     = errors.New("imtemplment of codec is wrong, cant return nil when not error")
+	errCodecNil = errors.New("config Codec is nil")
+	errSaveNil  = errors.New("can not load or save nil configuration value")
 )
 
 // Codec interface define encode and decode function
@@ -134,9 +137,9 @@ func (fc *FileConfig) StartWatcher(handler NotifyHandler) error {
 				if handler != nil {
 					action := handler(fc, ev)
 					switch action {
-					case NA_Stop:
+					case NAStop:
 						return
-					case NA_Restart:
+					case NARestart:
 						watcher.RemoveWatch(fc.FileName())
 						watcher.Watch(fc.FileName())
 					}
@@ -164,11 +167,11 @@ func (fc *FileConfig) LoadFromFile(v interface{}) error {
 	defer fc.lk.RUnlock()
 
 	if v == nil {
-		return ErrSaveNil
+		return errSaveNil
 	}
 
 	if fc.codec == nil {
-		return ErrCodecNil
+		return errCodecNil
 	}
 
 	data, err := ioutil.ReadFile(fc.fileName)
@@ -181,7 +184,7 @@ func (fc *FileConfig) LoadFromFile(v interface{}) error {
 		return err
 	}
 	if v == nil {
-		return ErrImpl
+		return errImpl
 	}
 
 	fc.base.Set(reflect.ValueOf(v).Elem().Interface())
@@ -197,7 +200,7 @@ func (fc *FileConfig) SaveToFile(v interface{}) error {
 	defer fc.lk.Unlock()
 
 	if v == nil {
-		return ErrSaveNil
+		return errSaveNil
 	}
 
 	data, err := fc.codec.Encode(v)

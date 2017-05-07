@@ -10,20 +10,24 @@ package config
 
 import "sync/atomic"
 
+// Config struct
 type Config struct {
 	internalStore atomic.Value
 }
 
+// NewConfig new config save v into internal store
 func NewConfig(v interface{}) *Config {
 	c := new(Config)
 	c.internalStore.Store(v)
 	return c
 }
 
+// Get get config inter store value
 func (c *Config) Get() interface{} {
 	return c.internalStore.Load()
 }
 
+// Set the setter function
 func (c *Config) Set(v interface{}) {
 	c.internalStore.Store(v)
 }

@@ -15,10 +15,10 @@ type testTConfig struct {
 	ConnPoolSize int    `xml:"DB>ConnPoolSize"`
 }
 
-var test_item = testTConfig{true, "test", 10, 10, "p1", "p2", "localhost:3306", "defualt", "", 400}
+var testItem = testTConfig{true, "test", 10, 10, "p1", "p2", "localhost:3306", "defualt", "", 400}
 
 var testConfigDates = []interface{}{
-	test_item,
+	testItem,
 	uint16(61374),
 	int8(-54),
 	uint8(254),

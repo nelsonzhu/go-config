@@ -8,15 +8,15 @@ import (
 	"github.com/howeyc/fsnotify"
 )
 
-const test_filename = "test.txt"
+const testFilename = "test.txt"
 
-const fakeCoder_text = "test"
+const fakeCoderText = "test"
 
 type fakeCoder struct {
 }
 
 func (fc *fakeCoder) Encode(v interface{}) ([]byte, error) {
-	return []byte(fakeCoder_text), nil
+	return []byte(fakeCoderText), nil
 }
 
 func (fc *fakeCoder) Decode(data []byte, v interface{}) error {
@@ -25,23 +25,23 @@ func (fc *fakeCoder) Decode(data []byte, v interface{}) error {
 }
 
 func Test_GetAndSetFileName(t *testing.T) {
-	v := NewFileConfig(test_filename, new(fakeCoder))
-	v.SetFileName(test_filename)
-	if v.FileName() != test_filename {
-		t.Errorf("FileName test failed, get %s != set %s", v.FileName(), test_filename)
+	v := NewFileConfig(testFilename, new(fakeCoder))
+	v.SetFileName(testFilename)
+	if v.FileName() != testFilename {
+		t.Errorf("FileName test failed, get %s != set %s", v.FileName(), testFilename)
 	}
 }
 
 func Test_SaveAndLoadConfValue(t *testing.T) {
-	fc := NewFileConfig(test_filename, new(fakeCoder))
-	err := fc.SaveToFile(fakeCoder_text)
+	fc := NewFileConfig(testFilename, new(fakeCoder))
+	err := fc.SaveToFile(fakeCoderText)
 	if err != nil {
 		t.Error("SavetoFile test failed", err)
 	}
-	defer os.Remove(test_filename)
+	defer os.Remove(testFilename)
 	newvalue := fc.Value()
-	if newvalue != fakeCoder_text {
-		t.Errorf("ConfValue test failed, get %v != set %v", newvalue, fakeCoder_text)
+	if newvalue != fakeCoderText {
+		t.Errorf("ConfValue test failed, get %v != set %v", newvalue, fakeCoderText)
 	}
 	str := new(string)
 	err = fc.LoadFromFile(str)
@@ -57,16 +57,16 @@ var receivedEvent = make(chan *fsnotify.FileEvent)
 
 func watcherhandler(Sender *FileConfig, event *fsnotify.FileEvent) NotifyAction {
 	receivedEvent <- event
-	return NA_Restart
+	return NARestart
 }
 
 func Test_FileWatcher(t *testing.T) {
-	fc := NewFileConfig(test_filename, new(fakeCoder))
-	err := fc.SaveToFile(fakeCoder_text)
+	fc := NewFileConfig(testFilename, new(fakeCoder))
+	err := fc.SaveToFile(fakeCoderText)
 	if err != nil {
 		t.Error("SavetoFile failed ", err)
 	}
-	defer os.Remove(test_filename)
+	defer os.Remove(testFilename)
 
 	err = fc.StartWatcher(watcherhandler)
 	if err != nil {
@@ -77,14 +77,14 @@ func Test_FileWatcher(t *testing.T) {
 		t.Error("Start watcher failed")
 	}
 
-	var event_count = 0
+	var eventCount = 0
 	done := make(chan bool)
 	go func() {
 		for {
 			select {
 			case ev := <-receivedEvent:
 				t.Log("Reveived event ", ev)
-				event_count++
+				eventCount++
 			case <-done:
 				return
 			case <-time.After(3 * time.Second):
@@ -94,7 +94,7 @@ func Test_FileWatcher(t *testing.T) {
 		}
 	}()
 
-	err = fc.SaveToFile(fakeCoder_text)
+	err = fc.SaveToFile(fakeCoderText)
 	if err != nil {
 		t.Error("SavetoFile test failed", err)
 	}
@@ -106,7 +106,7 @@ func Test_FileWatcher(t *testing.T) {
 		t.Error("Watcher stop failed")
 	}
 
-	if event_count == 0 {
+	if eventCount == 0 {
 		t.Error("Receive evernt failed")
 	}
 }

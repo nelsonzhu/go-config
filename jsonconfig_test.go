@@ -5,11 +5,11 @@ import (
 	"testing"
 )
 
-const fileName_json = "test.json"
+const jasonFileName = "test.json"
 
 func Test_SaveAndLoadFromJsonFile(t *testing.T) {
-	jc := NewJsonConfig(fileName_json)
-	value := test_item
+	jc := NewJSONConfig(jasonFileName)
+	value := testItem
 
 	jcValue := new(testTConfig)
 
@@ -17,7 +17,7 @@ func Test_SaveAndLoadFromJsonFile(t *testing.T) {
 	if err != nil {
 		t.Error("Save file failed ", err)
 	}
-	defer os.Remove(fileName_json)
+	defer os.Remove(jasonFileName)
 
 	err = jc.LoadFromFile(jcValue)
 	if err != nil {

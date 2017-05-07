@@ -5,11 +5,11 @@ import (
 	"testing"
 )
 
-const fileName_xml = "test.xml"
+const xmlFileName = "test.xml"
 
 func Test_SaveAndLoadFromXMLFile(t *testing.T) {
-	jx := NewXMLConfig(fileName_xml)
-	value := test_item
+	jx := NewXMLConfig(xmlFileName)
+	value := testItem
 
 	jxValue := new(testTConfig)
 
@@ -17,7 +17,7 @@ func Test_SaveAndLoadFromXMLFile(t *testing.T) {
 	if err != nil {
 		t.Error("Save file failed ", err)
 	}
-	defer os.Remove(fileName_xml)
+	defer os.Remove(xmlFileName)
 
 	err = jx.LoadFromFile(jxValue)
 	if err != nil {

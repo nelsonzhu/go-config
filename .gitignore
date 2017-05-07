@@ -1,0 +1,6 @@
+*.log
+logs/
+billing
+*.[oa]
+conf/*.bak
+.vscode/
